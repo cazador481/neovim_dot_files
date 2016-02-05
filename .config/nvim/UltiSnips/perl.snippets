@@ -1,0 +1,123 @@
+snippet try "try catch"
+try
+{
+	$1
+}
+catch
+{
+	$2;
+};
+endsnippet
+snippet has "Moose has"
+has $1 => ( 
+   isa => $2,
+   is => $3,
+   default=>$4,
+   builder=>$5,
+);
+endsnippet
+
+snippet method "sub method"
+=method $1
+
+${2:Description goes here}
+
+=for Paramters
+* ${3: Param goes here}
+
+Returns: 
+* ${$4: N/A}
+
+=cut
+
+sub $1 
+{
+	my $self=shift;
+	${3:${VISUAL}}
+}
+endsnippet
+snippet sub "subroutine"
+sub $1 
+{
+	${2:${VISUAL}}
+}
+endsnippet
+
+snippet perl "perl include"
+#!/home/utils/perl-5.16/5.16.2-nothreads-64/bin/perl
+endsnippet
+
+snippet moo_role "role"
+package $1;
+use strict;
+use warnings;
+use Moo::Role;
+
+$2
+
+1;
+endsnippet
+
+
+snippet script "create self contained script"
+
+#!/home/utils/perl-5.20/5.20.1-001/bin/perl
+
+use strict;
+use warnings;
+use lib '/home/nv/lib/perl5/'; # loads default nv libs
+
+package $1;
+use Moo;
+use MooX::Options;
+use MooX::HandlesVia;
+with qw( MooX::Log::Any);
+option debug => (is =>'rw',default=>0,trigger=>1);
+option quiet =>(is =>'rw', default=>0);
+
+
+sub _trigger_debug
+{
+        use Log::Log4perl qw(:easy);
+        Log::Log4perl->easy_init({level=>$DEBUG,layout=>"%C [%p]%d-%m%n"});
+
+}
+#Main routine
+sub run
+{
+    my $self=shift;
+    $self->log->debug('hi');
+}
+
+
+sub BUILDARGS
+{
+    my ($class,@args)=@_;
+    if (caller)
+    {
+        use Log::Any::Adapter;
+        use Log::Log4perl qw(:easy);
+        Log::Any::Adapter->set('Log4perl');
+        Log::Log4perl->easy_init({level=>$ERROR,layout=>"%C [%p]%d-%m%n"});
+    }
+    return {@args};
+}
+$SIG{__DIE__} = sub {
+    if($^S) {
+        # We're in an eval {} and don't want log
+        # this message but catch it later
+        return;
+    }
+    $Log::Log4perl::caller_depth++;
+    my $logger = get_logger("");
+    $logger->fatal(@_);
+    die @_; # Now terminate really
+};
+
+__PACKAGE__->new_with_options->run;
+1;
+
+endsnippet
+
+
+
