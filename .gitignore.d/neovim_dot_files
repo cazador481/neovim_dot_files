@@ -1,0 +1,11 @@
+*
+!/.config
+!/.config/nvim
+!/.config/nvim/*
+!/.config/nvim/**
+.config/nvim/.netrwhist
+!/.config/nvim/syntax
+!/.config/nvim/syntax/**
+
+!/.config/nvim/.gitignore
+!/.config/nvim/init.vim
