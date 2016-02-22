@@ -164,6 +164,9 @@ NeoBundle 'wellle/targets.vim'
 NeoBundle 'tpope/vim-obsession'
 NeoBundle 'jszakmeister/vim-togglecursor'
 NeoBundle 'cazador481/fakeclip.neovim', {'type__protocol': 'ssh'}
+
+
+NeoBundle 'sjl/splice.vim.git'
 call neobundle#end()
 "
 if neobundle#is_installed('neobundle')
@@ -746,4 +749,6 @@ if !exists(":DiffOrig")
 endif
 "}}}
 
+"text template
+ au BufNewFile,BufRead *.tt setf tt2
 " vim: set fdm=marker:
