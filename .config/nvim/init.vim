@@ -144,6 +144,7 @@ NeoBundle 'airblade/vim-rooter' " finds the root dir
 NeoBundle 'vim-perl/vim-perl'
 " autocmd FileType perl NeoBundleSource perl-support.vim
 NeoBundle 'cazador481/perlomni.vim'
+NeoBundle 'catalinciurea/perl-nextmethod' "enables [M, [m, ]M,]m
 " autocmd FileType perl set omnifunc=perlcomplete#PerlComplete
 " autocmd FileType perl NeoBundleSource perlomni.vim
 "NeoBundle 'http://github.com/cazador481/vim-cute-perl.git'
