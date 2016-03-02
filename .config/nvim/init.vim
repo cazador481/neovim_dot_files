@@ -7,7 +7,7 @@ let g:neobundle#types#git#default_protocol='https'
 let iCanHazBundle=1
 if (empty($XDG_CONFIG_HOME))
     let bundle_path=expand('~').'/.config/nvim/bundle'
-elseif
+else
     let bundle_path=$XDG_CONFIG_HOME.'/nvim/bundle'
 endif
 
