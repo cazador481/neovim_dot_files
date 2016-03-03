@@ -41,7 +41,7 @@ NeoBundle 'benekastah/neomake'
 NeoBundle 'godlygeek/tabular'
 " NeoBundle 'http://github.com/cazador481/vim-systemverilog'
 NeoBundle 'tpope/vim-eunuch' "file modification commands, like Unlink, Move
-NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-fugitive', {'augroup' : 'fugitive'}
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-dispatch'
 " NeoBundle 'embear/vim-foldsearch'
@@ -177,7 +177,9 @@ set exrc
 filetype plugin indent on
 
 syntax on
-color ea
+if neobundle#is_installed('ea_color') "{{{
+    color ea
+endif "}}}
 set visualbell
 set tags=tags;
 set clipboard^=unnamedplus "uses x-11 clipboard, stores in middle mouse
@@ -752,4 +754,5 @@ endif
 
 "text template
  au BufNewFile,BufRead *.tt setf tt2
+
 " vim: set fdm=marker:
