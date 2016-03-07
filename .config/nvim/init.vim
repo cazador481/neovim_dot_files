@@ -170,7 +170,7 @@ NeoBundle 'cazador481/fakeclip.neovim', {'type__protocol': 'ssh'}
 NeoBundle 'sjl/splice.vim.git'
 call neobundle#end()
 "
-if neobundle#is_installed('neobundle')
+if neobundle#tap('neobundle')
     NeoBundleCheck
 endif
 set exrc
@@ -264,7 +264,7 @@ endif
 "}}}
 
 "supertab settings {{{
-if neobundle#is_installed('supertab')
+if neobundle#tap('supertab')
     let g:SuperTabLongestHighlight=1
     let g:SuperTabDefaultCompletionType = "context"
 endif
@@ -274,7 +274,7 @@ endif
 "map <C-c> <M-c> 
 "}}}
 "UltiSnips {{{
- if neobundle#is_installed('ultisnips')
+ if neobundle#tap('ultisnips')
      let g:UltiSnipSnippetsDir=bundle_path."/UltiSnips"
 let g:UltiSnipsExpandTrigger="<c-f>"
 let g:UltiSnipsJumpForwardTrigger="<c-f>"
@@ -331,7 +331,7 @@ autocmd BufRead, BufnewFile *.t  set equalprg=perltidy\ -q
 "{{{ Nerd Commenter
 let g:NERDCustomDelimiters = { 'verilog_systemverilog': { 'left': '//', }, }
 "}}}
-if neobundle#is_installed('rainbow_parenthesis.vim') "{{{
+if neobundle#tap('rainbow_parenthesis.vim') "{{{
     au VimEnter * RainbowParentheses
 endif
 "}}}
@@ -370,7 +370,7 @@ if has("multi_byte")  "{{{
     "endif
 endif "}}}
 
-if neobundle#is_installed('ctrlp.vim') "{{{
+if neobundle#tap('ctrlp.vim') "{{{
 "     let g:ctrlp_user_command={
 "                 \ 'types': {
 "                 \ 1: ['git', 'cd %s && git ls-files'],
@@ -379,7 +379,7 @@ if neobundle#is_installed('ctrlp.vim') "{{{
 "                 \}
     let g:ctrp_root_markers=['.crucible', 'TOT']
 endif "}}}
-if neobundle#is_installed('unite.vim') "{{{
+if neobundle#tap('unite.vim') "{{{
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
     noremap <C-p> :execute 'Unite -start-insert file_rec/async:'.unite#util#path2project_directory(findfile("TOT",getcwd().";"))<cr> 
     noremap <leader>b :Unite -start-insert buffer <cr>
@@ -414,7 +414,7 @@ endif
 
 "}}}
 
-if neobundle#is_installed('YouCompleteMe') "{{{
+if neobundle#tap('YouCompleteMe') "{{{
 
     let g:ycm_collect_identifiers_from_comments_and_strings=1
     let g:ycm_seed_identifiers_with_syntax = 1
@@ -424,7 +424,7 @@ if neobundle#is_installed('YouCompleteMe') "{{{
     let g:ycm_key_list_select_completion=['<TAB>']
 endif
 "}}}
-if neobundle#is_installed('deoplete.nvim') "{{{
+if neobundle#tap('deoplete.nvim') "{{{
 	let g:deoplete#enable_at_startup= 1
     let g:deocomplete#auto_completion_start_length=0
     let g:deoplete#ignore_sources={}
@@ -443,7 +443,7 @@ if neobundle#is_installed('deoplete.nvim') "{{{
 	  endfunction"}}}
 endif
 "}}}
-if neobundle#is_installed('neocomplete.vim') "{{{
+if neobundle#tap('neocomplete.vim') "{{{
 " Use neocomplete.
 	let g:neocomplete#enable_at_startup = 1
 	" Use smartcase.
@@ -532,7 +532,7 @@ if neobundle#is_installed('neocomplete.vim') "{{{
 " <TAB>: completion.
 endif
 "}}}
-if neobundle#is_installed('neocomplcache.vim') "{{{
+if neobundle#tap('neocomplcache.vim') "{{{
     "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
     " Disable AutoComplPop.
     let g:acp_enableAtStartup = 0
@@ -645,13 +645,13 @@ map! <C-S-Insert> <MiddleMouse>
 if executable("ag")
     set grepprg=ag\ --nogroup\ --nocolor\ --hidden
     let g:unite_source_rec_async_command= ['ag', '--nocolor', '--nogroup','-g', '']
-    if neobundle#is_installed('ctrlp.vim') "{{{
+    if neobundle#tap('ctrlp.vim') "{{{
         let g:ctrlp_user_command='ag %s -l --nocolor -g ""'
     endif
     "}}}
 endif "}}}
 "TODO: fix rainbow parent
-" if neobundle#is_installed('rainbow_parentheses.vim') "{{{
+" if neobundle#tap('rainbow_parentheses.vim') "{{{
 "
 "     au VimEnter * RainbowParenthesesToggle
 "     au Syntax * RainbowParenthesesLoadRound
@@ -660,19 +660,19 @@ endif "}}}
 " endif 
 "}}}
 
-if neobundle#is_installed('syntastic') "{{{
+if neobundle#tap('syntastic') "{{{
     let syntastic_perl_checkers=['perlcritic', 'perl']
     let g:syntastic_perl_lib_path=['./lib', '/home/scratch.eash/NV-rtltime/lib/']
     let g:syntastic_enable_perl_checker=0
 endif "}}}
-if neobundle#is_installed('vim-buftabline') "{{{
+if neobundle#tap('vim-buftabline') "{{{
     let g:buftabline_numbers=1 " enable numbering
 
 
 
 endif "}}}
 
-if neobundle#is_installed('vim-fakeclip') "{{{
+if neobundle#tap('vim-fakeclip') "{{{
     if !has ('gui_running')
         " Do not connect to X server
 "        set clipboard+=exclude:.*
@@ -687,7 +687,7 @@ endif "}}}
 let g:sql_type_default='mysql'
 
 
-if neobundle#is_installed('dbext.vim') "{{{
+if neobundle#tap('dbext.vim') "{{{
     let g:dbext_default_profile_fullchip_ro= 'type=MYSQL:user=fullchipsims_ro:passwd=CB2ea79!:dbname=gpu_fullchip_sims:host=gpu-db-gpufullchipsims-read'
     let g:dbext_default_profile_fullchip_dev= 'type=MYSQL:user=fullchipsims_dev:passwd=dev:dbname=GPUFullchipSims:host=gpu-db-gpufullchipsims-dev'
     let g:dbext_default_profile_golden_dev= 'type=MYSQL:user=goldecl_usr:passwd=iMsTj6Fe:dbname=GoldenCl:host=gpu-db-goldencl-dev'
@@ -736,7 +736,7 @@ endfunction
 nnoremap <silent> j :<c-u>call LineMotion("j")<cr>
 nnoremap <silent> k :<c-u>call LineMotion("k")<cr>
 
-if neobundle#is_installed('vim-rooter') "{{{
+if neobundle#tap('vim-rooter') "{{{
     let g:rooter_patterns = ['dist.ini', 'TOT']
 endif "}}}
 
