@@ -1,4 +1,3 @@
-filetype off "pathogen needs to run before plugin indent on
 
 "autoinstall neobundle {{{
 
@@ -40,7 +39,9 @@ NeoBundleFetch 'Shougo/neobundle'
 NeoBundle 'benekastah/neomake'
 NeoBundle 'godlygeek/tabular'
 " NeoBundle 'http://github.com/cazador481/vim-systemverilog'
-NeoBundle 'tpope/vim-eunuch' "file modification commands, like Unlink, Move
+"file modification commands, like Unlink, Move
+NeoBundle 'tpope/vim-eunuch', { 'on_cmd' : [ 'Rename', 'Unlink', 'Move', 'Remove', 'Chmod', 'Mdir', 'Find','Locate','Wall','SudoWrite','SudoEdit']}
+
 NeoBundle 'tpope/vim-fugitive', {'augroup' : 'fugitive'}
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-dispatch'
@@ -85,6 +86,7 @@ autocmd FileType cpp NeoBundleSource vim-protodef
 " NeoBundle 'http://github.com/vim-scripts/FSwitch'
 NeoBundle 'kana/vim-textobj-user'
 NeoBundle 'thinca/vim-textobj-function-perl', {'depends': 'kana/vim-textobj-function'} "perl text object
+NeoBundle 'vimtaku/vim-textobj-sigil', {'depends': 'kana/vim-textobj-user'} "perl text object
 NeoBundle 'paulhybryant/vim-textobj-path', {'depends': 'kana/vim-textobj-user'} "perl text object
 "NeoBundle 'http://github.com/bling/vim-bufferline'
 " NeoBundle 'http://github.com/kien/ctrlp.vim'
@@ -122,7 +124,7 @@ NeoBundle 'Shougo/vimproc', {
      " \ }
 ""   , { 'build' : { 'unix' : 'cmake -G "Unix Makefiles" . ~/.vim/bundle/YouCompleteMe/cpp -DPYTHON_INCLUDE_DIR=/usr/intel/pkgs/python/2.7.2/include/python2.7/ -DPYTHON_LIBRARY=/usr/intel/pkgs/python/2.7.2/lib/libpython2.7.so;make', } }
 
-NeoBundle 'vim-scripts/octave.vim--'
+"NeoBundle 'vim-scripts/octave.vim--'
 "Better diff handling
 NeoBundle 'chrisbra/vim-diff-enhanced'
 NeoBundle 'Shougo/context_filetype.vim' " perlomni needs
@@ -174,7 +176,7 @@ if neobundle#is_installed('neobundle')
     NeoBundleCheck
 endif
 set exrc
-filetype plugin indent on
+" filetype plugin indent on
 
 syntax on
 if neobundle#is_installed('ea_color') "{{{
@@ -325,10 +327,6 @@ let g:Perl_GlobalTemplateFile=$HOME.'/.vim/bundle/perl-support.vim/perl-support/
 
 let g:Perl_TemplateOverriddenMsg='yes'
 let g:Perl_DirectRun='yes'
-
-autocmd BufRead, BufnewFile *.pl set equalprg=perltidy\ -q
-autocmd BufRead, BufnewFile *.pm set equalprg=perltidy\ -q
-autocmd BufRead, BufnewFile *.t  set equalprg=perltidy\ -q
 "}}}
 "{{{ Nerd Commenter
 let g:NERDCustomDelimiters = { 'verilog_systemverilog': { 'left': '//', }, }
