@@ -208,6 +208,10 @@ endif
 set lazyredraw
 set synmaxcol=255 " syntax coloring long lines slows down the word
 
+"undo file {{{
+set undofile
+set undodir=~/.config/nvim/undodir
+"}}}
 
 "indent {{{
 set tabstop=4
