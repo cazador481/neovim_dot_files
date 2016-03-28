@@ -43,10 +43,6 @@ sub $1
 }
 endsnippet
 
-snippet perl "perl include"
-#!/home/utils/perl-5.16/5.16.2-nothreads-64/bin/perl
-endsnippet
-
 snippet moo_role "role"
 package $1;
 use strict;
@@ -58,66 +54,25 @@ $2
 1;
 endsnippet
 
+snippet #! "run perl"
+#!/home/utils/perl-5.22/5.22.0-008/bin/perl
+endsnippet
 
-snippet script "create self contained script"
-
-#!/home/utils/perl-5.20/5.20.1-001/bin/perl
-
-use strict;
-use warnings;
-use lib '/home/nv/lib/perl5/'; # loads default nv libs
+snippet modulino
+use lib '/home/nv/utils/perl-modules/NV-MooX-Modulino/1.0.2/lib/perl5/';
 
 package $1;
 use Moo;
-use MooX::Options;
-use MooX::HandlesVia;
-with qw( MooX::Log::Any);
-option debug => (is =>'rw',default=>0,trigger=>1);
-option quiet =>(is =>'rw', default=>0);
+with 'NV::MooX::Modulino';
+with 'MooX::Log::Any'; # enables ->log from Log::Any, optional
+with 'NV::MooX::Modulino::Log4perl'; #enables log4perl, optional
 
 
-sub _trigger_debug
-{
-        use Log::Log4perl qw(:easy);
-        Log::Log4perl->easy_init({level=>$DEBUG,layout=>"%C [%p]%d-%m%n"});
-
-}
-#Main routine
-sub run
-{
+#this gets run 
+sub run  {
     my $self=shift;
-    $self->log->debug('hi');
-}
+} 
 
 
-sub BUILDARGS
-{
-    my ($class,@args)=@_;
-    if (caller)
-    {
-        use Log::Any::Adapter;
-        use Log::Log4perl qw(:easy);
-        Log::Any::Adapter->set('Log4perl');
-        Log::Log4perl->easy_init({level=>$ERROR,layout=>"%C [%p]%d-%m%n"});
-    }
-    return {@args};
-}
-$SIG{__DIE__} = sub {
-    if($^S) {
-        # We're in an eval {} and don't want log
-        # this message but catch it later
-        return;
-    }
-    $Log::Log4perl::caller_depth++;
-    my $logger = get_logger("");
-    $logger->fatal(@_);
-    die @_; # Now terminate really
-};
-
-__PACKAGE__->new_with_options->run;
-1;
-
+$1->_modulino({},caller);
 endsnippet
-
-
-
