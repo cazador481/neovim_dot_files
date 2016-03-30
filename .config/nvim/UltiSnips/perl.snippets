@@ -63,10 +63,13 @@ use lib '/home/nv/utils/perl-modules/NV-MooX-Modulino/1.0.2/lib/perl5/';
 
 package $1;
 use Moo;
+use MooX::Options author=>'Edward Ash <eash@nvidia.com>'
 with 'NV::MooX::Modulino';
 with 'MooX::Log::Any'; # enables ->log from Log::Any, optional
 with 'NV::MooX::Modulino::Log4perl'; #enables log4perl, optional
-
+#work around issue with Moox and type tiny  https://github.com/tobyink/p5-type-tiny/pull/27
+$Error::TypeTiny::CarpInternal{Method::Generate::Constructor}=1;
+$Error::TypeTiny::CarpInternal{Method::Generate::Accessor}=1;
 
 #this gets run 
 sub run  {
