@@ -167,16 +167,17 @@ NeoBundle 'wellle/targets.vim'
 NeoBundle 'tpope/vim-obsession'
 NeoBundle 'jszakmeister/vim-togglecursor'
 NeoBundle 'cazador481/fakeclip.neovim', {'type__protocol': 'ssh'}
-
-
+NeoBundle 'theevocater/vim-perforce'
+NeoBundle 'nhooyr/neoman.vim'
 NeoBundle 'sjl/splice.vim.git'
+NeoBundle 'Konfekt/FastFold'
 call neobundle#end()
 "
 if neobundle#tap('neobundle')
     NeoBundleCheck
 endif
 set exrc
-" filetype plugin indent on
+filetype plugin indent on
 
 syntax on
 if neobundle#is_installed('ea_color') "{{{
@@ -716,10 +717,21 @@ set path+=lib/
 
 "#nomaker
 let g:neomake_perl_perlc_maker = {
-            \ 'args': ['--critic'],
             \ 'exe': 'perlc',
-            \ 'buffer_output': 1
+            \ 'buffer_output': 1,
+            \ 'errorformat': 
+            \ '%-G%.%#had\ compilation\ errors.,'. 
+            \ '%-G%.%#syntax\ OK,'.
+            \ '%m\ at\ %f\ line\ %l.'
  \}
+let g:neomake_perl_enabled_makers=['perlc', 'perlcritic']
+
+let g:neomake_perl_perlcritic_maker = { 
+            \'exe': 'perlcritic',
+            \ 'arg' : ['--quiet --nocolor --verbose "\s%s:%f:%\l:\%c:(\%s) \%m (\%e)\n"'],
+            \ 'errorformat': '%t:%f:%l:%c:%m',
+            \}
+" set errorformat+=%m\ at\ %f\ line\ %l
 
 "map $home to /home/eash in gf
 " set includeexpr=substitute(v:fname,'$HOME','/home/eash','')
@@ -752,5 +764,40 @@ endif
 
 "text template
  au BufNewFile,BufRead *.tt setf tt2
+
+command! -nargs=1 Perldoc call Perldoc(<f-args>) 
+function! Perldoc(Method)
+    let tmp=tempname()
+    call system("perldoc -onroff -d ".tmp." ".a:Method)
+    if (v:shell_error)
+        echom "Could not find docs for ".a:Method
+        return
+    endif
+    " silent exec "!perldoc -onroff -d ".tmp a:Method
+    exec "Nman ".tmp
+    exec "file man://".a:Method
+    call delete(tmp)
+    set buflisted
+    
+endfunc
+
+function! Get_pagePerldoc(bang, editcmd, ...) abort
+  if a:0 > 2
+    call s:error('too many arguments')
+    return
+  elseif a:0 == 2
+    let sect = a:000[0]
+    let page = a:000[1]
+  else
+    " fpage is a string like 'printf(2)' or just 'printf'
+    " if no argument, use the word under the cursor
+    let fpage = get(a:000, 0, expand('<cWORD>'))
+    if empty(fpage)
+      call s:error('no WORD under cursor')
+      return
+    endif
+    call Perldoc(expand('<cWORD>'))
+  endif
+endfunction
 
 " vim: set fdm=marker:
