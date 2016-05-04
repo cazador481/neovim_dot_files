@@ -729,11 +729,13 @@ let g:neomake_perl_perlc_maker = {
             \ '%m\ at\ %f\ line\ %l.'
  \}
 let g:neomake_perl_enabled_makers=['perlc', 'perlcritic']
+            " \ 'arg' : ['--quiet --nocolor --verbose "\%s:\%f:\%l:\%c:(\%s) \%m (\%e)\n"'],
 
 let g:neomake_perl_perlcritic_maker = { 
             \'exe': 'perlcritic',
-            \ 'arg' : ['--quiet --nocolor --verbose "\s%s:%f:%\l:\%c:(\%s) \%m (\%e)\n"'],
-            \ 'errorformat': '%t:%f:%l:%c:%m',
+            \ 'args' : ['--quiet', '--nocolor', '--verbose', '\\%f:\\%l:\\%c:(\\%s) \\%m (\\%e)\\n'],
+            \ 'errorformat': 
+            \ '%f:%l:%c:%m,'
             \}
 " set errorformat+=%m\ at\ %f\ line\ %l
 
