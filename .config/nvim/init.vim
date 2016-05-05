@@ -203,6 +203,7 @@ set suffixesadd+=.gz
 set hidden "allows buffers to be hidden while having unsaved changes
 set nohlsearch  "turns off hlsearch, make default like vim
 set noincsearch
+set sidescroll=1 " scrolls by one when you go left on no wordwrap
 if has('nvim')
     set ttimeout
     set ttimeoutlen=0
