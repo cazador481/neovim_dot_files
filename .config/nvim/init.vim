@@ -216,7 +216,9 @@ set synmaxcol=255 " syntax coloring long lines slows down the word
 
 "undo file {{{
 set undofile
-set undodir=~/.config/nvim/undodir
+
+call mkdir($XDG_CACHE_HOME. "/nvim/undodir", "p", 0700)
+set undodir=$XDG_CACHE_HOME/nvim/undodir
 "}}}
 
 "indent {{{
