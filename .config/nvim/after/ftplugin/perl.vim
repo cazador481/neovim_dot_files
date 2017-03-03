@@ -1,2 +1,3 @@
 setlocal equalprg =perltidy\ -q
-setlocal keywordprg=perldoc
+setlocal keywordprg=$HOME/scripts/nv_perldoc
+setlocal path+=lib/,lib/perl5

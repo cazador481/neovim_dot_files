@@ -1,4 +1,3 @@
-
 "autoinstall neobundle {{{
 
 
@@ -94,7 +93,7 @@ NeoBundleLazy 'xolox/vim-reload', {'depends' : 'xolox/vim-misc' }
 autocmd FileType vim NeoBundleSource vim-reload
 " NeoBundle 'mattn/gist-vim', {'depends' : 'mattn/webapi-vim' }
 NeoBundle 'Shougo/unite.vim' 
-NeoBundle 'osyo-manga/unite-fold'
+" NeoBundle 'osyo-manga/unite-fold'
 " NeoBundle 'Shougo/neocomplete.vim'
 
 NeoBundleLazy 'vim-scripts/dbext.vim'
@@ -129,6 +128,7 @@ NeoBundle 'Shougo/vimproc', {
 NeoBundle 'chrisbra/vim-diff-enhanced'
 NeoBundle 'Shougo/context_filetype.vim' " perlomni needs
 NeoBundle 'Shougo/deoplete.nvim'
+NeoBundle 'zchee/deoplete-zsh'
 
 NeoBundle 'Shougo/neco-syntax'
 NeoBundle 'Shougo/neco-vim'
@@ -142,13 +142,13 @@ let g:pymode_rope_completion_on_dot=0
 NeoBundle 'airblade/vim-rooter' " finds the root dir
 "
 "perl bundles {{{
+NeoBundle 'https://raw.githubusercontent.com/thoughtstream/Damian-Conway-s-Vim-Setup/master/plugin/trackperlvars.vim', {'type' : 'raw' ,'script_type' : 'plugin'}
 " NeoBundle 'vim-scripts/perl-support.vim'
 NeoBundle 'vim-perl/vim-perl'
 " autocmd FileType perl NeoBundleSource perl-support.vim
 NeoBundle 'cazador481/perlomni.vim'
 NeoBundle 'catalinciurea/perl-nextmethod' "enables [M, [m, ]M,]m
 " autocmd FileType perl set omnifunc=perlcomplete#PerlComplete
-" autocmd FileType perl NeoBundleSource perlomni.vim
 "NeoBundle 'http://github.com/cazador481/vim-cute-perl.git'
 "NeoBundle 'http://github.com/vim-scripts/perlprove.vim'
 "}}}
@@ -163,14 +163,14 @@ NeoBundle 'sjl/badwolf'
 "}}}
 
 NeoBundle 'avakhov/vim-yaml'
-NeoBundle 'wellle/targets.vim'
+NeoBundle 'wellle/targets.vim' " additional  text objects
 NeoBundle 'tpope/vim-obsession'
-NeoBundle 'jszakmeister/vim-togglecursor'
-NeoBundle 'cazador481/fakeclip.neovim', {'type__protocol': 'ssh'}
+"NeoBundle 'jszakmeister/vim-togglecursor'
+" NeoBundle 'cazador481/fakeclip.neovim', {'type__protocol': 'ssh'}
 NeoBundle 'theevocater/vim-perforce'
 NeoBundle 'nhooyr/neoman.vim'
 NeoBundle 'sjl/splice.vim.git'
-NeoBundle 'Konfekt/FastFold'
+NeoBundle 'vim-scripts/AnsiEsc.vim' "evals ansi escape codes.
 call neobundle#end()
 "
 if neobundle#tap('neobundle')
@@ -184,6 +184,7 @@ if neobundle#is_installed('ea_color') "{{{
     color ea
 endif "}}}
 set visualbell
+"set termguicolors
 set tags=tags;
 set clipboard^=unnamedplus "uses x-11 clipboard, stores in middle mouse
 set ruler
@@ -209,7 +210,9 @@ if has('nvim')
     set ttimeoutlen=0
     set matchtime=0
 endif
-
+if has('patch1799')
+    set termguicolors "enable true color support
+endif
 "general things to speed up vim
 set lazyredraw
 set synmaxcol=255 " syntax coloring long lines slows down the word
@@ -229,20 +232,6 @@ set expandtab
 set copyindent
 " set cindent
 "}}}
-func! s:etwd() "sets path to .git {{{
-    let cph = expand('%:p:h', 1)
-    if isdirectory(cph) == 0 |return|endif
-    if match(cph, '\v^<.+>://') >= 0 | retu | endif
-    for mkr in ['.git/', '.hg/', '.vimprojects']
-        let wd = call('find'.(mkr =~ '/$' ? 'dir' : 'file'), [mkr, cph.';'])
-        if wd != '' | let &acd = 0 | brea | endif
-    endfo
-    exe 'lc!' fnameescape(wd == '' ? cph : substitute(wd, mkr.'$', '.', ''))
-endfunc "}}}
-
-
-
-au BufEnter * cal s:etwd()
 
 "{{{Tlist
 
@@ -253,13 +242,14 @@ let Tlist_Show_One_File = 1
 map <S-Enter> O<ESC>
 map <Enter> o<Esc>
 "folding {{{
+set fdo +=jump " Enable opening of folds always
 
 set foldenable
 set foldmethod=syntax
 set wildmenu
 set wildmode=list:longest,full
-set mouse=a "enables mouse mode in console
 "}}}
+set mouse=a "enables mouse mode in console
 "Get completion to work sanely {{{
 "inoremap <expr> <cr> pumvisible() ? "\<c-y>" : "\<c-g>u\<cr>"
 inoremap <expr> <c-n> pumvisible() ? "\<lt>c-n>" : "\<lt>c-n>\<lt>c-r>=pumvisible() ? \"\\<lt>down>\" : \"\"\<lt>cr>" 
@@ -389,7 +379,8 @@ if neobundle#tap('ctrlp.vim') "{{{
 endif "}}}
 if neobundle#tap('unite.vim') "{{{
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
-    noremap <C-p> :execute 'Unite -start-insert file_rec/async:'.unite#util#path2project_directory(findfile("TOT",getcwd().";"))<cr> 
+    " noremap <C-p> :execute 'Unite -start-insert file_rec/async:'.unite#util#path2project_directory(findfile("TOT",getcwd().";"))<cr> 
+    noremap <C-p> :execute 'Unite -start-insert file_rec/async:'<cr> 
     noremap <leader>b :Unite -start-insert buffer <cr>
     " let g:unite_source_grep_command = 'ag --ignore .build'
     let g:unite_source_grep_command = 'ag'
@@ -651,7 +642,7 @@ map! <C-S-Insert> <MiddleMouse>
 "{{{ use silver search
     let g:unite_source_rec_async_command= ['ag', '--nocolor', '--nogroup','-g', '']
 if executable("ag")
-    set grepprg=ag\ --nogroup\ --nocolor\ --hidden
+    set grepprg=ag\ --nogroup\ --nocolor\ 
     let g:unite_source_rec_async_command= ['ag', '--nocolor', '--nogroup','-g', '']
     if neobundle#tap('ctrlp.vim') "{{{
         let g:ctrlp_user_command='ag %s -l --nocolor -g ""'
@@ -712,13 +703,11 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o "
  nmap <C-c> y: call system("xclip -i -selection clipboard", getreg("\""))<CR>
 "}}} 
 
-"{{{perl critic
+"{{{perl critic error format
 set errorformat+=%m\ at\ %f\ line\ %l\.
 set errorformat+=%m\ at\ %f\ line\ %l
 "}}}
 
-
-set path+=lib/
 
 
 
@@ -733,15 +722,8 @@ let g:neomake_perl_perlc_maker = {
  \}
 let g:neomake_perl_enabled_makers=['perlc', 'perlcritic']
             " \ 'arg' : ['--quiet --nocolor --verbose "\%s:\%f:\%l:\%c:(\%s) \%m (\%e)\n"'],
-
-let g:neomake_perl_perlcritic_maker = { 
-            \'exe': 'perlcritic',
-            \ 'args' : ['--quiet', '--nocolor', '--verbose', '\\%f:\\%l:\\%c:(\\%s) \\%m (\\%e)\\n'],
-            \ 'errorformat': 
-            \ '%f:%l:%c:%m,'
-            \}
-" set errorformat+=%m\ at\ %f\ line\ %l
-
+autocmd! BufWritePost * Neomake
+let g:neomake_open_list=2
 "map $home to /home/eash in gf
 " set includeexpr=substitute(v:fname,'$HOME','/home/eash','')
 
@@ -757,9 +739,9 @@ endfunction
 nnoremap <silent> j :<c-u>call LineMotion("j")<cr>
 nnoremap <silent> k :<c-u>call LineMotion("k")<cr>
 
-if neobundle#tap('vim-rooter') "{{{
-    let g:rooter_patterns = ['dist.ini', 'TOT']
-endif "}}}
+" if neobundle#tap('vim-rooter') "{{{
+    let g:rooter_patterns = ['dist.ini', 'TOT', '.git', '.git/', '.p4config']
+" endif "}}}
 
 "{{{ DiffOrig
 " Convenient command to see the difference between the current buffer and the
@@ -808,5 +790,44 @@ function! Get_pagePerldoc(bang, editcmd, ...) abort
     call Perldoc(expand('<cWORD>'))
   endif
 endfunction
+
+
+"=====[ Emphasize typical mistakes in Vim and Perl files ]=========
+
+" Add a new high-visibility highlight combination...
+highlight WHITE_ON_RED    ctermfg=white  ctermbg=red
+
+" Emphasize undereferenced references...
+call matchadd('WHITE_ON_RED', '_ref[ ]*[[{(]\|_ref[ ]*-[^>]')
+
+" Emphasize typical mistakes a Perl hacker makes in .vim files...
+let g:VimMistakes
+\   =     '\_^\s*\zs\%(my\s\+\)\?\%(\k:\)\?\k\+\%(\[.\{-}\]\)\?\s*[+-.]\?=[=>~]\@!'
+\   . '\|'
+\   .     '\_^\s*\zselsif'
+\   . '\|'
+\   .     ';\s*\_$'
+\   . '\|'
+\   .     '\_^\s*\zs#.*'
+\   . '\|'
+\   .     '\_^\s*\zs\k\+('
+
+let g:VimMistakesID = 668
+augroup VimMistakes
+    autocmd!
+    autocmd BufEnter  *.vim,*.vimrc   call VimMistakes_AddMatch()
+    autocmd BufLeave  *.vim,*.vimrc   call VimMistakes_ClearMatch()
+augroup END
+
+function! VimMistakes_AddMatch ()
+    try | call matchadd('WHITE_ON_RED',g:VimMistakes,10,g:VimMistakesID) | catch | endtry
+endfunction
+
+function! VimMistakes_ClearMatch ()
+    try | call matchdelete(g:VimMistakesID) | catch | endtry
+endfunction
+
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+set termguicolors
 
 " vim: set fdm=marker:

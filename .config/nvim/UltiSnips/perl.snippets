@@ -8,12 +8,31 @@ catch
 	$2;
 };
 endsnippet
-snippet has "Moose has"
-has $1 => ( 
-   isa => $2,
-   is => $3,
+
+snippet "^option " "Moose has" rbA
+option $1 => ( 
+   is => $2,
+   isa => $3,
    default=>$4,
-   builder=>$5,
+   documentation=>$5,
+);
+endsnippet
+
+snippet "^\s*DDP " "Data::Printer" rbA
+use Data::Printer; p $1;
+endsnippet
+snippet "^attr " "Attribute pod" rbA
+=attr $1
+$2
+=cut
+
+endsnippet
+snippet "^has " "Moose has" rbA
+has $1 => ( 
+   is => $2,
+   isa => $3,
+   default=>$4,
+   documentation=>$5,
 );
 endsnippet
 
@@ -26,15 +45,17 @@ ${2:Description goes here}
 * ${3: Param goes here}
 
 Returns: 
-* ${$4: N/A}
+* ${4: N/A}
 
 =cut
 
 sub $1 
 {
-	my $self=shift;
-	${3:${VISUAL}}
+	#param checking
+    my $check=compile(SELF);
+    my ($self$5)=$check->(@_);
 }
+
 endsnippet
 snippet sub "subroutine"
 sub $1 
@@ -54,22 +75,23 @@ $2
 1;
 endsnippet
 
-snippet #! "run perl"
-#!/home/utils/perl-5.22/5.22.0-008/bin/perl
+snippet "^#!" "run perl" rbA
+#!/home/utils/perl-5.22/5.22.0-016/bin/perl
 endsnippet
 
 snippet modulino
-use lib '/home/nv/utils/perl-modules/NV-MooX-Modulino/1.0.2/lib/perl5/';
+use lib '/home/nv/utils/perl-modules/NV-MooX-Modulino/1.0.3/lib/perl5/';
 
 package $1;
 use Moo;
-use MooX::Options author=>'Edward Ash <eash@nvidia.com>'
+use MooX::Options author=>'Edward Ash <eash@nvidia.com>';
 with 'NV::MooX::Modulino';
 with 'MooX::Log::Any'; # enables ->log from Log::Any, optional
 with 'NV::MooX::Modulino::Log4perl'; #enables log4perl, optional
 #work around issue with Moox and type tiny  https://github.com/tobyink/p5-type-tiny/pull/27
 $Error::TypeTiny::CarpInternal{Method::Generate::Constructor}=1;
 $Error::TypeTiny::CarpInternal{Method::Generate::Accessor}=1;
+$Error::TypeTiny::CarpInternal{MooX::Options::Role}=1;
 
 #this gets run 
 sub run  {
@@ -79,3 +101,41 @@ sub run  {
 
 $1->_modulino({},caller);
 endsnippet
+
+
+
+### dbix
+snippet belongs_to "DBIX"
+=head2 $1
+
+Type: belongs_to
+
+Related object: L<$2>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "$1",
+  "$2",
+  { 'foreign.id' => "self.$3" },
+);
+endsnippet
+
+
+snippet has_many "DBIX"
+=head2 $1
+
+Type: has_many
+
+Relate object: L<$2>
+
+=cut
+
+__PACKAGE__->has_many(
+    '$1',
+    '$2',
+    {'foreign.$3'=>'self.id'},
+);
+
+endsnippet
+
