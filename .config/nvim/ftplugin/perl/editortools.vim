@@ -35,7 +35,7 @@ function! RenameVariable()
     let line = line('.')
     " should backtrack to $ or % or the like
     let col  = col('.')
-    let filename = expand('%')
+    let filename = expand('%:r')
 
     let command = "editortools renamevariable -c " . col . " -l " . line  . " -r " . newvar 
 
@@ -75,7 +75,8 @@ function! Exec_command_and_replace_buffer(command)
     " echo a:command
 
     let buffer_contents = join( getline(1,"$"), "\n" )
-    let result_str = system(g:editor_tools_path, a:command, buffer_contents )
+    " let result_str = system(g:editor_tools_path. a:command, buffer_contents )
+    let result_str = system( a:command, buffer_contents )
     let result = split( result_str, "\n" )
     call setline( 1, result )
 endfunction

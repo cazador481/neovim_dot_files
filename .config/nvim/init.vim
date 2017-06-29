@@ -29,12 +29,12 @@ if !filereadable(bundle_readme)
     let iCanHazBundle=0
 endif
 execute 'set rtp+='.bundle_path.'/neobundle'
+set rtp+=/home/eash/.linuxbrew/opt/fzf
 call neobundle#begin(bundle_path)
 "}}}
 NeoBundleFetch 'Shougo/neobundle'
 "Add your bundles here
 "General bundles here {{{
-"  NeoBundle 'syntastic' "uber awesome syntax and errors highlighter
 NeoBundle 'benekastah/neomake'
 NeoBundle 'godlygeek/tabular'
 " NeoBundle 'http://github.com/cazador481/vim-systemverilog'
@@ -71,7 +71,6 @@ autocmd FocusGained * call Tmux_display()
 
 endif
 " NeoBundle 'congma/vim-fakeclip'
-" NeoBundle 'wellle/tmux-complete.vim'
 "}}}
 
 " NeoBundle 'http://github.com/vim-scripts/taglist.vim'
@@ -88,19 +87,16 @@ NeoBundle 'thinca/vim-textobj-function-perl', {'depends': 'kana/vim-textobj-func
 NeoBundle 'vimtaku/vim-textobj-sigil', {'depends': 'kana/vim-textobj-user'} "perl text object
 NeoBundle 'paulhybryant/vim-textobj-path', {'depends': 'kana/vim-textobj-user'} "perl text object
 "NeoBundle 'http://github.com/bling/vim-bufferline'
-" NeoBundle 'http://github.com/kien/ctrlp.vim'
 NeoBundleLazy 'xolox/vim-reload', {'depends' : 'xolox/vim-misc' }
 autocmd FileType vim NeoBundleSource vim-reload
 " NeoBundle 'mattn/gist-vim', {'depends' : 'mattn/webapi-vim' }
-NeoBundle 'Shougo/unite.vim' 
+"NeoBundle 'Shougo/unite.vim' 
 " NeoBundle 'osyo-manga/unite-fold'
 " NeoBundle 'Shougo/neocomplete.vim'
 
 NeoBundleLazy 'vim-scripts/dbext.vim'
 autocmd FileType sql NeoBundleSource dbext.vim
-" NeoBundle 'vim-pipe'
 " NeoBundle 'tomtom/quickfixsigns_vim'
-" NeoBundle 'tomtom/checksyntax_vim', {'depends' : ['tomtom/quickfixsigns_vim','pydave/AsyncCommand'] }
 
 
 "
@@ -112,23 +108,13 @@ NeoBundle 'Shougo/vimproc', {
 \     'mac' : 'make -f make_mac.mak',
 \     'unix' : 'make -f make_unix.mak',
 \    }, }
-" if has("unix") && (v:version >703 || has('patch584'))
-" NeoBundle 'Valloric/YouCompleteMe', {
-     " \ 'build'      : {
-     "    \ 'mac'     : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-     "    \ 'unix'    : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-     "    \ 'windows' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-     "    \ 'cygwin'  : './install.sh --clang-completer --system-libclang --omnisharp-completer'
-     "    \ }
-     " \ }
-""   , { 'build' : { 'unix' : 'cmake -G "Unix Makefiles" . ~/.vim/bundle/YouCompleteMe/cpp -DPYTHON_INCLUDE_DIR=/usr/intel/pkgs/python/2.7.2/include/python2.7/ -DPYTHON_LIBRARY=/usr/intel/pkgs/python/2.7.2/lib/libpython2.7.so;make', } }
-
 "NeoBundle 'vim-scripts/octave.vim--'
 "Better diff handling
 NeoBundle 'chrisbra/vim-diff-enhanced'
 NeoBundle 'Shougo/context_filetype.vim' " perlomni needs
 NeoBundle 'Shougo/deoplete.nvim'
 NeoBundle 'zchee/deoplete-zsh'
+NeoBundle 'wellle/tmux-complete.vim'
 
 NeoBundle 'Shougo/neco-syntax'
 NeoBundle 'Shougo/neco-vim'
@@ -166,11 +152,12 @@ NeoBundle 'avakhov/vim-yaml'
 NeoBundle 'wellle/targets.vim' " additional  text objects
 NeoBundle 'tpope/vim-obsession'
 "NeoBundle 'jszakmeister/vim-togglecursor'
-" NeoBundle 'cazador481/fakeclip.neovim', {'type__protocol': 'ssh'}
 NeoBundle 'theevocater/vim-perforce'
 NeoBundle 'nhooyr/neoman.vim'
 NeoBundle 'sjl/splice.vim.git'
 NeoBundle 'vim-scripts/AnsiEsc.vim' "evals ansi escape codes.
+NeoBundle 'junegunn/fzf.vim'
+NeoBundle 'kergoth/vim-hilinks'
 call neobundle#end()
 "
 if neobundle#tap('neobundle')
@@ -195,7 +182,7 @@ set so=10
 set background=dark
 let g:load_doxygen_syntax=1
 set number
-set ic
+set infercase
 set diffopt+=iwhite " ignores white space
 set diffopt+=icase " ignores case
 set diffopt+=filler " create filler lines
@@ -320,7 +307,8 @@ endif
 "perl-support {{{
 let perl_fold=1
 let perl_nofold_packages=1
-let g:perl_fold_anonymous_subs=1
+let perl_fold_anonymous_subs=1
+let perl_include_pod=1
 let g:Perl_GlobalTemplateFile=$HOME.'/.vim/bundle/perl-support.vim/perl-support/templates/Templates'
 
 let g:Perl_TemplateOverriddenMsg='yes'
@@ -368,15 +356,6 @@ if has("multi_byte")  "{{{
     "endif
 endif "}}}
 
-if neobundle#tap('ctrlp.vim') "{{{
-"     let g:ctrlp_user_command={
-"                 \ 'types': {
-"                 \ 1: ['git', 'cd %s && git ls-files'],
-"                 \ },
-"                 \ 'fallback': 'find %s -type f'
-"                 \}
-    let g:ctrp_root_markers=['.crucible', 'TOT']
-endif "}}}
 if neobundle#tap('unite.vim') "{{{
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
     " noremap <C-p> :execute 'Unite -start-insert file_rec/async:'.unite#util#path2project_directory(findfile("TOT",getcwd().";"))<cr> 
@@ -424,6 +403,8 @@ if neobundle#tap('YouCompleteMe') "{{{
 endif
 "}}}
 if neobundle#tap('deoplete.nvim') "{{{
+    
+    " call deoplete#enable_logging("DEBUG","/tmp/deoplete")
 	let g:deoplete#enable_at_startup= 1
     let g:deocomplete#auto_completion_start_length=0
     let g:deoplete#ignore_sources={}
@@ -628,6 +609,11 @@ endif
 nmap <silent> <Leader>w :update<CR>
 "}}}
 
+"black hole mapping {{{
+"#to delete text object, put type text object shortcut after command
+nmap <leader>d "_d"
+"}}}
+
 "{{{ arrow key to buffer map
 set hidden
 nnoremap <C-LEFT> :bp<CR>
@@ -697,12 +683,6 @@ endif "}}}
 " Disable auto comments
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o "Makes copying and pasting using mosh work better
 
-
-"{{{clipboard with xclip 
- vmap <C-c> :<Esc>`>a<CR><Esc>mx`<i<CR><Esc>my'xk$v'y!xclip -selection c<CR>u
- nmap <C-c> y: call system("xclip -i -selection clipboard", getreg("\""))<CR>
-"}}} 
-
 "{{{perl critic error format
 set errorformat+=%m\ at\ %f\ line\ %l\.
 set errorformat+=%m\ at\ %f\ line\ %l
@@ -713,12 +693,12 @@ set errorformat+=%m\ at\ %f\ line\ %l
 
 "#nomaker
 let g:neomake_perl_perlc_maker = {
-            \ 'exe': 'perlc',
-            \ 'buffer_output': 1,
+            \ 'exe': '/home/eash/scripts/perlc',
+            \ 'buffer_output': 0,
             \ 'errorformat': 
+            \ '%m at %f line %l%s,'.
             \ '%-G%.%#had\ compilation\ errors.,'. 
-            \ '%-G%.%#syntax\ OK,'.
-            \ '%m\ at\ %f\ line\ %l.'
+            \ '%-G%.%#syntax\ OK'
  \}
 let g:neomake_perl_enabled_makers=['perlc', 'perlcritic']
             " \ 'arg' : ['--quiet --nocolor --verbose "\%s:\%f:\%l:\%c:(\%s) \%m (\%e)\n"'],
@@ -827,7 +807,29 @@ function! VimMistakes_ClearMatch ()
     try | call matchdelete(g:VimMistakesID) | catch | endtry
 endfunction
 
-let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-set termguicolors
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=2
+
+let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+"#set termguicolors
+
+map cv :call RenameVariable()<cr>
+
+"{{{ Self defined file types
+au BufRead,BufNewFile *.asb set filetype=asb
+"}}}
+
+"{{{ Smarter interstitial completion of identifiers 
+augroup Undouble_Completions
+    autocmd!
+    autocmd CompleteDone * call Undouble_Completions()
+augroup end
+
+function!  Undouble_Completions ()
+    let col = getpos('.')[2]
+    let line=getline('.')
+    call setline('.',substitute(line,'\(\.\?\k\+\)\%'.col.'c\zs\1','',''))
+endfunction
+
+"}}}
 
 " vim: set fdm=marker:
