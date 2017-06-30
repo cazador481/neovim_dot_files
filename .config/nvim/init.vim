@@ -121,10 +121,12 @@ NeoBundle 'Shougo/neco-vim'
 " NeoBundle 'Shougo/neoinclude'
 "}}}
 "
-
+"{{{ Python budles
+NeoBundle 'zchee/deoplete-jedi'
 NeoBundle 'klen/python-mode.git'
 let g:pymode_rope_completion=0
 let g:pymode_rope_completion_on_dot=0
+"}}}
 NeoBundle 'airblade/vim-rooter' " finds the root dir
 "
 "perl bundles {{{
@@ -831,5 +833,11 @@ function!  Undouble_Completions ()
 endfunction
 
 "}}}
+
+if filereadable('/home/utils/Python-2.7.9/bin/python') 
+    let g:python_host_prog='/home/utils/Python-2.7.9/bin/python'
+    let g:python3_host_prog='/home/utils/Python-3.4.2/bin/python3'
+    let g:deoplete#sources#jedi#python_path=g:python3_host_prog
+endif
 
 " vim: set fdm=marker:
